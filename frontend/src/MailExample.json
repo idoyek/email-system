@@ -1,0 +1,82 @@
+[
+  {
+    "from": "ido",
+    "to": ["idan"],
+    "cc": [],
+    "subject": "Example 1",
+    "text": "Hi!",
+    "time": "4pm"
+  },
+  {
+    "from": "alice",
+    "to": ["bob"],
+    "cc": [],
+    "subject": "Meeting Reminder",
+    "text": "Don't forget about.",
+    "time": "3pm"
+  },
+  {
+    "from": "carol",
+    "to": ["dave"],
+    "cc": [],
+    "subject": "Project Update",
+    "text": "The project is on.",
+    "time": "1pm"
+  },
+  {
+    "from": "eve",
+    "to": ["frank"],
+    "cc": [],
+    "subject": "Budget Report",
+    "text": "The budget .",
+    "time": "2pm"
+  },
+  {
+    "from": "grace",
+    "to": ["heidi"],
+    "cc": [],
+    "subject": "Team Outing",
+    "text": "Looking forward to.",
+    "time": "11am"
+  },
+  {
+    "from": "ivan",
+    "to": ["judy"],
+    "cc": [],
+    "subject": "Code Review",
+    "text": "Please review the.",
+    "time": "10am"
+  },
+  {
+    "from": "karen",
+    "to": ["leo"],
+    "cc": [],
+    "subject": "Invoice",
+    "text": "The invoice for .",
+    "time": "9am"
+  },
+  {
+    "from": "mike",
+    "to": ["nancy"],
+    "cc": [],
+    "subject": "Holiday Schedule",
+    "text": "The holiday schedule.",
+    "time": "8am"
+  },
+  {
+    "from": "oscar",
+    "to": ["peter"],
+    "cc": [],
+    "subject": "New Hire",
+    "text": "We have a new .",
+    "time": "7am"
+  },
+  {
+    "from": "quinn",
+    "to": ["rachel"],
+    "cc": [],
+    "subject": "Conference",
+    "text": "The details for .",
+    "time": "6am"
+  }
+]
