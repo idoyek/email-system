@@ -1,21 +1,17 @@
 import * as React from "react";
-import Box from '@mui/material/Box';
+import Box from "@mui/material/Box";
 import { FixedSizeList } from "react-window";
 import Email from "./Email";
+import { useContext } from "react";
+import { EmailsContext } from "../../store/AppContext";
 
-export default function EmailsList({ inboxEmailsList }) {
+export default function EmailsList({setSelectedMail}) {
+  const { emailsList } = useContext(EmailsContext);
   const renderRow = ({ index, style }) => {
-    const email = inboxEmailsList[index];
+    const email = emailsList[index];
     return (
       <div style={style} key={index}>
-        <Email
-          from={email.from}
-          to={email.to}
-          cc={email.cc}
-          subject={email.subject}
-          text={email.text}
-          time={email.time}
-        />
+        <Email mail={email} setSelectedMail={setSelectedMail}/>
       </div>
     );
   };
@@ -33,10 +29,10 @@ export default function EmailsList({ inboxEmailsList }) {
         height={450}
         width={360}
         itemSize={80}
-        itemCount={inboxEmailsList.length}
+        itemCount={emailsList.length}
         overscanCount={5}
       >
-        {renderRow}
+        {emailsList.length > 0 && renderRow}
       </FixedSizeList>
     </Box>
   );

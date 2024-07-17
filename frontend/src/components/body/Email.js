@@ -5,13 +5,17 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
-import Box from '@mui/material/Box';
+import Box from "@mui/material/Box";
 import UserLogo from "../header/UserLogo";
 
-export default function Email({ from, to, cc, subject, text, time }) {
+export default function Email({ mail, setSelectedMail }) {
+  const { from, to, cc, subject, text, time } = mail;
+  const handleSelectedMail = () => {
+    setSelectedMail(mail);
+  };
   return (
     <Box sx={{ maxHeight: "200px", overflowY: "auto", padding: 0 }}>
-      <ListItem alignItems="flex-start">
+      <ListItem onClick={handleSelectedMail} alignItems="flex-start">
         <ListItemAvatar>
           <UserLogo />
           {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" /> */}
