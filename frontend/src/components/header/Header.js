@@ -4,11 +4,11 @@ import RightButtons from './RightButtons';
 
 import { AppBar, Toolbar } from "@mui/material";
 
-export default function Header({setShowNewEmailPopUp}) {
+export default function Header({setShowNewEmailPopUp, setSelectedEmailCategory}) {
   return (
     <AppBar position="static">
       <Toolbar>
-        <EmailDisplayButtons />
+        <EmailDisplayButtons setSelectedEmailCategory={setSelectedEmailCategory}/>
         <Search />
         <RightButtons setShowNewEmailPopUp={setShowNewEmailPopUp}/>
       </Toolbar>

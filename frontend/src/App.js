@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import Register from "./components/register/Register";
 import Login from "./components/login/Login";
 import { AppProvider } from "./store/AppContext";
+// import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
   return (
@@ -13,8 +14,9 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            {/* <Route path="/email" element={<ProtectedRoute element={<EmailPage />} />} /> */}
             <Route path="/email" element={<EmailPage />} />
-            <Route path="/" element={<Navigate to="/register" />} />
+            <Route path="/" element={<Navigate to="/email" />} />
           </Routes>
         </Router>
       </div>

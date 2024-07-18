@@ -1,46 +1,50 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+// const cookieParser = require("cookie-parser");
+// const jwt = require("jsonwebtoken");
+// const bcrypt = require("bcrypt");
+require("dotenv").config();
 
 const app = express();
-app.use(cors());
+
+const corsOptions = {
+  origin: "http://localhost:3000",
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
+// app.use(cookieParser());
 
-const uri = "mongodb://127.0.0.1:27017/email-system";
+const User = require("./models/user");
+const Mail = require("./models/mail");
 
-mongoose.connect(uri, {
+mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
-const userSchema = new mongoose.Schema({
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-});
-
-const User = mongoose.model("User", userSchema);
-
-const mailSchema = new mongoose.Schema({
-  from: { type: String, required: true },
-  to: { type: String, required: true },
-  cc: { type: String, required: true },
-  subject: { type: String, required: true },
-  text: { type: String, required: true },
-  time: { type: String, required: true },
-});
-
-const Mail = mongoose.model("Mail", mailSchema);
-
 app.post("/api/register", async (req, res) => {
   try {
     const { firstName, lastName, email, password } = req.body;
-    const newUser = new User({ firstName, lastName, email, password });
+    // const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new User({
+      firstName,
+      lastName,
+      email,
+      password
+    });
     await newUser.save();
+
+    // const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+    //   expiresIn: "1h",
+    // });
+    // res.cookie("token", token, { httpOnly: false, maxAge: 3600000 }); // 1 hour
 
     res.status(201).json({
       status: "success",
+      user: newUser,
     });
   } catch (error) {
     console.error("Error registering user:", error);
@@ -51,9 +55,23 @@ app.post("/api/register", async (req, res) => {
 app.post("/api/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email, password });
+    const user = await User.findOne({ email });
 
-    if (user) {
+    if (!user) {
+      return res.status(401).json({
+        status: "failure",
+        message: "Invalid email or password",
+      });
+    }
+
+    // const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = password === user.password;
+    if (isMatch) {
+    //   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    //     expiresIn: "1h",
+    //   });
+    //   res.cookie("token", token, { httpOnly: true, maxAge: 3600000 }); // 1 hour
+
       res.status(200).json({
         status: "success",
         user: user,
@@ -70,23 +88,56 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
+// const authenticateToken = (req, res, next) => {
+//   const token = req.cookies.token;
+//   if (!token) {
+//     return res
+//       .status(401)
+//       .json({ status: "failure", message: "Not authenticated" });
+//   }
+
+//   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+//     if (err) {
+//       return res
+//         .status(403)
+//         .json({ status: "failure", message: "Invalid token" });
+//     }
+//     req.user = user;
+//     next();
+//   });
+// };
+
 app.get("/api/email", async (req, res) => {
-    try {
-        const emails = await Mail.find();
-        res.status(200).json({
-            status: "success",
-            emails: emails
-        })
-    } catch (error) {
-        console.error("Error fetching emails:", error);
-        res.status(500).json({ status: "failure", message: "Server error" });
+  try {
+    const { currentUserEmail, selectedEmailCategory } = req.query;
+    console.log("Received request - currentUser:", currentUserEmail, "selectedEmailCategory:", selectedEmailCategory);
+    let query = {};
+
+    if (selectedEmailCategory === "inbox") {
+      query.to = currentUserEmail;
+    } else if (selectedEmailCategory === "outbox") {
+      query.fromEmail = currentUserEmail;
+    } else if (selectedEmailCategory === "draft") {
+      // TODO
     }
+
+    const emails = await Mail.find(query);
+    console.log("emails:", emails);
+
+    res.status(200).json({
+      status: "success",
+      emails: emails,
+    });
+  } catch (error) {
+    console.error("Error fetching emails:", error);
+    res.status(500).json({ status: "failure", message: "Server error" });
+  }
 });
 
 app.post("/api/email", async (req, res) => {
   try {
-    const { from, to, cc, subject, text, time } = req.body;
-    const newMail = new Mail({ from, to, cc, subject, text, time });
+    const { from, fromEmail, to, cc, subject, text, time } = req.body;
+    const newMail = new Mail({ from, fromEmail, to, cc, subject, text, time });
     await newMail.save();
 
     res.status(201).json({
@@ -98,5 +149,5 @@ app.post("/api/email", async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

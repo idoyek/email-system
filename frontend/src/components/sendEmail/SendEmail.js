@@ -28,6 +28,7 @@ export default function SendEmail({ open, handleClose }) {
 
       const mail = {
         from: `${currentUser.firstName} ${currentUser.lastName}`,
+        fromEmail: currentUser.email,
         to: recipient,
         cc: "cc",
         subject: subject,

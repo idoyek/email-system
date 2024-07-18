@@ -29,7 +29,6 @@ export default function Login() {
     };
     try {
       const response = await HttpRequests.loginUser(userData);
-
       if (response.status === "success") {
         setCurrentUser(response.user);
         navigate("/email");
