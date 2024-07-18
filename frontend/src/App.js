@@ -16,7 +16,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             {/* <Route path="/email" element={<ProtectedRoute element={<EmailPage />} />} /> */}
             <Route path="/email" element={<EmailPage />} />
-            <Route path="/" element={<Navigate to="/email" />} />
+            <Route path="/" element={<Navigate to="/login" />} />
           </Routes>
         </Router>
       </div>
